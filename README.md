@@ -18,5 +18,19 @@
 ```
 
 
+## 在入口文件中加入  
+
+```
+require __DIR__.'/../vendor/autoload.php';
+```
+
+或
+
+```
+require __DIR__.'/vendor/autoload.php';
+```
+
+
+
 
 

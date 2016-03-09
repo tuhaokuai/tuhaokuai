@@ -1,0 +1,21 @@
+{
+    "name": "tuhaokuai/tuhaokuai",
+    "description": "Compress Image",
+    "type": "service",
+    "keywords": ["image","cdn","compress"],
+    "homepage": "http://www.tuhaokuai.com/",
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "tuhaokuai",
+            "email": "nuno.zhang@snow021.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.1.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": { 
+        "files": ["tuhaokuai.php"] 
+    } 
+}

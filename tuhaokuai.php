@@ -133,7 +133,7 @@ class tuhaokuai {
         }
  
         
-        return $url;
+        return $this->url.'/'.$host.'/'.$url;
 
 
 

@@ -15,8 +15,8 @@ echo $tu->linkNew('http://a/baidu.jpg')."<br>";
 */
 class tuhaokuai {
     public $url = "http://s1.tuhaokuai.com";
-    public $doti = false;//是否开启加速域名
-    public $fixPort  = true; // 修复../
+    public $open = true;//是否开启加速域名
+    public $fixPort = false;
     public $useJsLink = false;
     public $useCssLink = false;
     public $useImageLink = true;
@@ -31,7 +31,7 @@ class tuhaokuai {
             'googleapis.com'
     );
     function output($string){
-         if($this->doti !== true){
+         if($this->open !== true){
             return $string;
          }
          if(strpos( $_SERVER['SCRIPT_NAME'] ,'/admin/')!==false ){
@@ -75,7 +75,7 @@ class tuhaokuai {
          return $string; 
     }
     
-    static $tryFixPortNum = 0;
+    
     
     function tryFixPort($url){
         $i = substr_count($url,'../');
@@ -116,8 +116,6 @@ class tuhaokuai {
      * @param $url
      */
     function linkNew($url){ 
-
-        static::$tryFixPortNum = 0;
 
         if(strpos($url,$this->url)!==false){
             return $url;
@@ -185,11 +183,9 @@ class tuhaokuai {
             $url = $this->tryFixPort($url);
             
         }
-        if(strpos($url,'../')==false){
-            return $this->url.'/'.$host.'/'.$url;    
-        }
         
-        return $url;
+        return $this->url.'/'.$host.'/'.$url;
+
 
 
         

@@ -15,8 +15,10 @@ echo $tu->linkNew('http://a/baidu.jpg')."<br>";
 */
 class tuhaokuai {
     public $url = "http://s1.tuhaokuai.com";
-    public $useJsLink = true;
-    public $useCssLink = true;
+    public $doti = false;//是否开启加速域名
+    public $fixPort  = true; // 修复../
+    public $useJsLink = false;
+    public $useCssLink = false;
     public $useImageLink = true;
     public $useHrefLink = false;
     public $https = false;
@@ -29,6 +31,9 @@ class tuhaokuai {
             'googleapis.com'
     );
     function output($string){
+         if($this->doti !== true){
+            return $string;
+         }
          if(strpos( $_SERVER['SCRIPT_NAME'] ,'/admin/')!==false ){
             return $string;
          }
@@ -70,6 +75,41 @@ class tuhaokuai {
          return $string; 
     }
     
+    static $tryFixPortNum = 0;
+    
+    function tryFixPort($url){
+        $i = substr_count($url,'../');
+        if($i>0){
+
+            $res = $_SERVER['REQUEST_URI'];     
+            $ai = explode('/', $res);
+            array_pop($ai);
+            $ai = array_filter($ai);
+            
+            $ai = array_merge($ai,[]);
+            $ai = array_reverse($ai);
+      //      print_r($ai);
+            $url = str_replace('../', '', $url);
+            $url = str_replace('./', '/', $url);
+            $q = $i;
+           // echo $url.'/';
+            for($j=0;$j<$i;$j++){
+                $r[] = $ai[$j];
+             //   echo $url."<br>";
+              //  print_r($ai);
+                
+            }
+            $r = array_reverse($r);
+            $rs = implode('/',$r);
+            
+            $url = $rs.'/'.$url;
+            $url = str_replace('//', '/', $url);
+
+        }
+        //echo $url;exit;
+
+        return $url;
+    }
     /**
      * 
      * create new link
@@ -77,10 +117,15 @@ class tuhaokuai {
      */
     function linkNew($url){ 
 
+        static::$tryFixPortNum = 0;
 
         if(strpos($url,$this->url)!==false){
             return $url;
         }
+        
+
+
+
         $key = 'tuhaokuailink'.md5($url);
         if(isset(static::$NoRepeat[$key])){
             return  static::$NoRepeat[$key];
@@ -131,7 +176,15 @@ class tuhaokuai {
             return  $url;
 
         }
- 
+     
+
+         //处理../../目录
+        
+        if($this->fixPort === true && strpos($url,'../')!==false){
+             
+            $url = $this->tryFixPort($url);
+            
+        }
         
         return $this->url.'/'.$host.'/'.$url;
 

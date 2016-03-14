@@ -86,7 +86,7 @@ class tuhaokuai {
             array_pop($ai);
             $ai = array_filter($ai);
             
-            $ai = array_merge($ai,[]);
+            $ai = array_merge($ai,array());
             $ai = array_reverse($ai);
       //      print_r($ai);
             $url = str_replace('../', '', $url);
@@ -185,9 +185,11 @@ class tuhaokuai {
             $url = $this->tryFixPort($url);
             
         }
+        if(strpos($url,'../')==false){
+            return $this->url.'/'.$host.'/'.$url;    
+        }
         
-        return $this->url.'/'.$host.'/'.$url;
-
+        return $url;
 
 
         

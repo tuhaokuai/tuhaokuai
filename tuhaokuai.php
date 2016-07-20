@@ -66,9 +66,9 @@ class tuhaokuai {
                         continue;
                     }
                 } 
-                if(!static::$only[md5($v)]){
+                if(!self::$only[md5($v)]){
                     $string = str_replace($v,$this->linkNew($v),$string);
-                    static::$only[md5($v)] = true;
+                    self::$only[md5($v)] = true;
                 }
             }
          } 
@@ -80,7 +80,6 @@ class tuhaokuai {
     function tryFixPort($url){
         $i = substr_count($url,'../');
         if($i>0){
-
             $res = $_SERVER['REQUEST_URI'];     
             $ai = explode('/', $res);
             array_pop($ai);
@@ -104,10 +103,8 @@ class tuhaokuai {
             
             $url = $rs.'/'.$url;
             $url = str_replace('//', '/', $url);
-
         }
         //echo $url;exit;
-
         return $url;
     }
     /**
@@ -116,22 +113,18 @@ class tuhaokuai {
      * @param $url
      */
     function linkNew($url){ 
-
         if(strpos($url,$this->url)!==false){
             return $url;
         }
         
-
-
-
         $key = 'tuhaokuailink'.md5($url);
-        if(isset(static::$NoRepeat[$key])){
-            return  static::$NoRepeat[$key];
+        if(isset(self::$NoRepeat[$key])){
+            return  self::$NoRepeat[$key];
         }
         $ext = substr($url,strrpos($url,'.')+1); 
         
         if(!in_array($ext,$this->allowExt) && !$this->allowDomain($url)){
-            static::$NoRepeat[$key] = $url;
+            self::$NoRepeat[$key] = $url;
             return  $url;
         }
         $host = $_SERVER['HTTP_HOST'];
@@ -139,43 +132,36 @@ class tuhaokuai {
         if($this->https === true){
             $top = 'https:';
         }  
-
         //对URL分析
         // http://yourdomain/a/b/c.jpg
         // return  http://s1.tuhaokuai.com/yourdomain/a/b/c.jpg
         if(strpos($url,$top.'//'.$host)!==false){ 
             $url = $this->url.'/'.substr($url,strlen($top."//"));
-            static::$NoRepeat[$key] = $url;
+            self::$NoRepeat[$key] = $url;
             return  $url;
         }
-
         // http://notyourdomain/a/b/c.jpg
         // return  http://s1.tuhaokuai.com/yourdomain/http://notyourdomain/a/b/c.jpg
         
         if(substr($url,0,7)=='http://'){
             $url = "/".$host."/".$url;
             $url = $this->url.$url;
-            static::$NoRepeat[$key] = $url;
+            self::$NoRepeat[$key] = $url;
             return  $url;
         }
-
         if(substr($url,0,2)=='//'){
             $url = "/".$host."/http:".$url;
             $url = $this->url.$url;
-            static::$NoRepeat[$key] = $url;
+            self::$NoRepeat[$key] = $url;
             return  $url;
         }
-
-
         if(substr($url,0,1)=='/'){
             $url = "/".$host.$url;
             $url = $this->url.$url;
-            static::$NoRepeat[$key] = $url;
+            self::$NoRepeat[$key] = $url;
             return  $url;
-
         }
      
-
          //处理../../目录
         
         if($this->fixPort === true && strpos($url,'../')!==false){
@@ -185,9 +171,6 @@ class tuhaokuai {
         }
         
         return $this->url.'/'.$host.'/'.$url;
-
-
-
         
         
     }
